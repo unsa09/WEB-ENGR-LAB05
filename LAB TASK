@@ -1,1 +1,55 @@
+class Student {
+  constructor(id, name, dateOfBirth) {
+    this.id = id;
+    this.name = name;
+    this.dateOfBirth = dateOfBirth;
+  }
 
+  enroll() {
+    console.log(`${this.name} has enrolled.`);
+  }
+}
+
+module.exports = Student;
+To create two child classes called RegularStudent and ExecutiveStudent and inherit them from the Student base class, you can use the following code:
+
+Copy code
+const Student = require('./student');
+
+class RegularStudent extends Student {
+  attendLab() {
+    console.log(`${this.name} is attending a lab.`);
+  }
+}
+
+class ExecutiveStudent extends Student {
+  attendTheory() {
+    console.log(`${this.name} is attending a theory class.`);
+  }
+}
+
+module.exports = { RegularStudent, ExecutiveStudent };
+To create a separate module and import the RegularStudent and ExecutiveStudent classes, you can use the following code:
+
+Copy code
+const { RegularStudent, ExecutiveStudent } = require('./student');
+
+console.log(RegularStudent);
+console.log(ExecutiveStudent);
+To create and open a database using the sqlite library, you can use the following code:
+
+Copy code
+const sqlite3 = require('sqlite3').verbose();
+
+let db = new sqlite3.Database('students.db');
+
+db.serialize(function() {
+  db.run('CREATE TABLE Student (id INT, name TEXT, dateOfBirth DATE)');
+});
+
+db.close();
+To insert two records for both regular and executive students, you can use the INSERT INTO statement like this:
+
+Copy code
+db.run('INSERT INTO Student (id, name, dateOfBirth) VALUES (?, ?, ?)', [1, 'John Doe', '2000-01-01']);
+db.run('INSERT INTO)
