@@ -1,1 +1,112 @@
+// Course.js
+class Course {
+  constructor(id, name, creditHours) {
+    this.id = id;
+    this.name = name;
+    this.creditHours = creditHours;
+  }
+}
 
+module.exports = Course;
+
+// University.js
+class University {
+  constructor(name) {
+    this.name = name;
+    this.image = '';
+  }
+
+  setImage(imageUrl) {
+    this.image = imageUrl;
+  }
+}
+
+module.exports = University;
+
+// Student.js
+const University = require('./University');
+const Course = require('./Course');
+
+class Student {
+  constructor() {
+    this.university = new University();
+    this.courses = [];
+  }
+
+  addCourse(course) {
+    if (course instanceof Course) {
+      this.courses.push(course);
+    }
+  }
+
+  belongsToUniversity(university) {
+    if (university instanceof University) {
+      this.university = university;
+    }
+  }
+}
+
+module.exports = Student;
+For the HTTP and database part, here's the code:
+
+Copy code
+// University.js
+const axios = require('axios');
+
+class University {
+  constructor(name) {
+    this.name = name;
+    this.image = '';
+  }
+
+  async setImage() {
+    try {
+      const response = await axios.get('https://www.ssuet.edu.pk/themes/ssuet/logo.png');
+      this.image = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+module.exports = University;
+
+// db.js
+const sqlite3 = require('sqlite3').verbose();
+
+const db = new sqlite3.Database(':memory:', (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log('Connected to the in-memory SQlite database.');
+});
+
+db.run(`CREATE TABLE University (
+  name TEXT,
+  image BLOB
+)`);
+
+module.exports = db;
+
+// main.js
+const University = require('./University');
+const db = require('./db');
+
+const ssuet = new University('SSUET');
+const ned = new University('NED');
+
+ssuet.setImage();
+ned.setImage();
+
+db.run(`INSERT INTO University (name, image) VALUES (?, ?)`, [ssuet.name, ssuet.image], function(err) {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log(`Row(s) inserted ${this.changes}`);
+});
+
+db.run(`INSERT INTO University (name, image) VALUES (?, ?)`, [ned.name, ned.image], function(err) {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.
